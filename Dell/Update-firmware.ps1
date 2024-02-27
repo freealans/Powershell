@@ -23,4 +23,24 @@ Update-DellFirmware {
 
 			[switch]$LogErrors
 		)
+		Begin{
+			Write-Verbose "Error log will be $ErrorLog"
+		}
+		Process{
+
+			ForEach-Object ($Computer in $Computername){
+				$Continue = $True
+				Try {
+					Write-Verbose "Connecting to machine $Computer"
+					Invoke-Command -ComputerName $Computer -ScriptBlock {
+						if (Test-Path -Path "%systemdrive%\Program Files\Dell\CommandUpdate\dcu-cli.exe")
+						}
+				}
+
+				Catch{
+
+				}
+			}
+		}
+		End{}
 }
