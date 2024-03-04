@@ -23,23 +23,57 @@ Update-DellFirmware {
 
 			[switch]$LogErrors
 		)
+
 		Begin{
+
+			#Define Functions
+			function Test-DellCommandInstalled {
+				[CmdletBinding()]
+				Param(
+					[string]$Pathx64 = "C:\Program Files\Dell\CommandUpdate\dcu-cli.exe"
+					[string]$Pathx32 = "C:\Program Files (x86)\Dell\CommandUpdate\dcu-cli.exe"
+				)
+
+					if (Test-Path -Path $Pathx64){
+						Write-host "Dell Command Update 64bit is installed."
+						}
+
+				Elseif (Test-Path -Path $Pathx32){
+						Write-Host "Dell Command Update 32Bit is installed."
+						}	
+				
+				Else {
+						Write-host "You need to install Dell Command Update."
+						}
+			}
+			
+			Function Install-DellCommandUpdate{
+				
+			}
+
+			#Define Error log
 			Write-Verbose "Error log will be $ErrorLog"
 		}
 		Process{
 
 			ForEach-Object ($Computer in $Computername){
 				$Continue = $True
+
 				Try {
 					Write-Verbose "Connecting to machine $Computer"
-					Invoke-Command -ComputerName $Computer -ScriptBlock {
-						if (Test-Path -Path "%systemdrive%\Program Files\Dell\CommandUpdate\dcu-cli.exe")
-						}
+					$Session = New-PSSession -ComputerName $computer -ErrorAction 
+					$Continue = $True
 				}
 
 				Catch{
 
 				}
+
+				Invoke-Command -session $Session -ScriptBlock {
+						
+						}
+
+
 			}
 		}
 		End{}
